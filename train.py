@@ -47,3 +47,9 @@ testing_data = datasets.ImageFolder(train_dir, transform = testing_transforms)
 trainloader = torch.utils.data.Dataloader(train_data, batch_size = 32, shuffle = True)
 validloader = torch.utils.data.Dataloader(valid_data, batch_size = 32, shuffle = True)
 testloader = torch.utils.data.Dataloader(testing_data, batch_size = 32, shuffle = True)
+
+#loop through dataloaders to get one batch
+for images, labels in trainloader:
+    pass
+
+images, labels = next(iter(trainloader))
