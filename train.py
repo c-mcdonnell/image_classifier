@@ -53,3 +53,8 @@ for images, labels in trainloader:
     pass
 
 images, labels = next(iter(trainloader))
+
+#load in label mapping
+import json
+with open('cat_to_name.json', 'r') as f:
+    cat_to_name = json.load(f)
