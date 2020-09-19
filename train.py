@@ -58,3 +58,14 @@ images, labels = next(iter(trainloader))
 import json
 with open('cat_to_name.json', 'r') as f:
     cat_to_name = json.load(f)
+
+#load a pretrained model
+
+#use GPU if available
+device = torch.device("cuda" if torch.cuda.is_available else "cpu")
+
+#load a pretrained model - freeze feature parameters
+model = models.vgg16(pretrained = True)
+for param in model.parameters():
+    param.requires_grad = True
+    
