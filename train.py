@@ -68,4 +68,20 @@ device = torch.device("cuda" if torch.cuda.is_available else "cpu")
 model = models.vgg16(pretrained = True)
 for param in model.parameters():
     param.requires_grad = True
-    
+
+#define feedforward network
+classifier = nn.Sequential(OrderedDict([
+                            ('fc1', nn.Linear(25088,4096)),
+                            ('relu1', nn.ReLU()),
+                            ('dropout1', nn.Dropout(0.2)),
+                            ('fc2', nn.Linnear(4096,2048)),
+                            ('relu2', nn.ReLU()),
+                            ('dropout2', nn.Dropout(0.2)),
+                            ('fc3', nn.Linnear(2048, 102)),
+                            ('output', nn.LogSoftmax(dim=1))]))
+model.classifier = classifier
+
+criterion = nn.NLLLoss()
+optimizer = optim.Adam(classifier.parameters(), lr = 0.0001)
+model = model.to(device)
+images, labels = images.to(device), labels.to(device)
