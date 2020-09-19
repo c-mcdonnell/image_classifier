@@ -42,3 +42,8 @@ testing_transforms = transforms.Compose([transforms.RandomResizedCrop(224),
 train_data = dtasets.ImageFolder(train_dir, transform = train_transforms)
 valid_data = datasets.ImageFolder(train_dir, transform = valid_transforms)
 testing_data = datasets.ImageFolder(train_dir, transform = testing_transforms)
+
+#define dataloaders
+trainloader = torch.utils.data.Dataloader(train_data, batch_size = 32, shuffle = True)
+validloader = torch.utils.data.Dataloader(valid_data, batch_size = 32, shuffle = True)
+testloader = torch.utils.data.Dataloader(testing_data, batch_size = 32, shuffle = True)
