@@ -173,3 +173,24 @@ with active_session():
     model.train()
 print('woohoo! Training is complete!')
 
+#save the checkpoint
+
+#save model to cpu
+device = torch.device('cpu')
+model = model.to(device)
+
+#assign class_to_idx as an attritube to model
+model.class_to_idx = train_data.class_to_idx
+
+#define checkpoint with parameters to be saved
+
+checkpoint = {'batch_size' : 32,
+            'learning_rate': 0.0001,
+            'state_dict': model.state_dict(),
+            'optimizer': optimizer.state_dict(),
+            'input_size': 25088,
+            'output_size': 4096,
+            'criterion': criterion,
+            'class_to_idx': model.class_to_idx}
+torch.save(checkpoint, 'checkpoint.ptch')
+
