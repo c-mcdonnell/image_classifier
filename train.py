@@ -6,7 +6,6 @@ from torch import nn, optim
 import torch.nn.functional as F
 from torchvision import datasets, transforms, models
 from collections import OrderedDict
-import helper
 from PIL import Image
 import numpy as np
 
@@ -36,14 +35,14 @@ testing_transforms = transforms.Compose([transforms.RandomResizedCrop(224),
                                                             [0.229, 0.224, 0.225])])
 
 #Load the datasets with ImageFolder
-train_data = dtasets.ImageFolder(train_dir, transform = train_transforms)
+train_data = datasets.ImageFolder(train_dir, transform = train_transforms)
 valid_data = datasets.ImageFolder(train_dir, transform = valid_transforms)
 testing_data = datasets.ImageFolder(train_dir, transform = testing_transforms)
 
 #define dataloaders
-trainloader = torch.utils.data.Dataloader(train_data, batch_size = 32, shuffle = True)
-validloader = torch.utils.data.Dataloader(valid_data, batch_size = 32, shuffle = True)
-testloader = torch.utils.data.Dataloader(testing_data, batch_size = 32, shuffle = True)
+trainloader = torch.utils.data.DataLoader(train_data, batch_size = 32, shuffle = True)
+validloader = torch.utils.data.DataLoader(valid_data, batch_size = 32, shuffle = True)
+testloader = torch.utils.data.DataLoader(testing_data, batch_size = 32, shuffle = True)
 
 #loop through dataloaders to get one batch
 for images, labels in trainloader:
@@ -145,9 +144,7 @@ with active_session():
                 model.eval()
 
                 with torch.no_grad():
-                '''
-                control new weights, don't calculate gradient; can continue backpropogation
-                '''
+                #control new weights, don't calculate gradient; can continue backpropogation
                     for images2, labels2 in validloader:
                         model.to(device)
                         images2, labels2 = images2.to(device), labels2.to(device)
