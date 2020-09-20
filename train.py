@@ -1,6 +1,5 @@
 # import necessary packages
 
-%matplotlib inline 
 %config InlineBackend.figure_format = 'retina'
 
 import matplotlib.pyplot as plt
@@ -74,10 +73,10 @@ classifier = nn.Sequential(OrderedDict([
                             ('fc1', nn.Linear(25088,4096)),
                             ('relu1', nn.ReLU()),
                             ('dropout1', nn.Dropout(0.2)),
-                            ('fc2', nn.Linnear(4096,2048)),
+                            ('fc2', nn.Linear(4096,2048)),
                             ('relu2', nn.ReLU()),
                             ('dropout2', nn.Dropout(0.2)),
-                            ('fc3', nn.Linnear(2048, 102)),
+                            ('fc3', nn.Linear(2048, 102)),
                             ('output', nn.LogSoftmax(dim=1))]))
 model.classifier = classifier
 
@@ -85,3 +84,97 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(classifier.parameters(), lr = 0.0001)
 model = model.to(device)
 images, labels = images.to(device), labels.to(device)
+
+
+#test, I don't think I need this
+'''
+i = 0
+for images, labels in trainloader:
+    model, images = model.to(device), images.to(device)
+    log_ps = model(images)
+    i += 1
+ps = torch.exp(log_ps)
+'''
+#train feedforward network
+
+#keep session active so it doesn't disconnect while training
+'''
+do I need this if not in jupyter notebook?
+'''
+from workspace_utils import active_session
+with active_session():
+    #get data, initialize parameters
+    images, labels = next(iter(trainloader))
+
+    epochs = 4
+    steps = 0
+    #running_loss = 0
+    '''
+    running_loss is below (line 126), do I need it up here too?
+    '''
+    print_every = 40
+    accuracy = 0
+    valid_loss = 0
+
+    #change model to train mode and move it to the GPU
+    model.train()
+    model.to(device)
+
+    #train
+    for e in range(epochs):
+        running_loss = 0
+        for images, labels in trainloader:
+
+            steps += 1
+            images, labels = images.to(device), labels.to(device)
+            '''
+            I don't think I need this because I already have it globally in line 87
+            '''
+            #clear out gradients
+            optimizer.zero_grad()
+
+            #forward and backward pass
+            log_ps = model(images)
+            training_loss = criterion(log_ps, labels)
+            training_loss.backward()
+            optimizer.step()
+
+            running_loss += training_loss.item()
+
+            #during training, every 40 steps, drop out of the training loop and test accuracy on validation set
+            #validate (switch to evaluation mode - turns off dropout so we can make accurate predictions)
+            if steps % print_every == 0:
+                model.eval()
+
+                with torch.no_grad():
+                '''
+                control new weights, don't calculate gradient; can continue backpropogation
+                '''
+                    for images2, labels2 in validloader:
+                        model.to(device)
+                        images2, labels2 = images2.to(device), labels2.to(device)
+                        #forward pass
+                        log_ps2 = model(images2)
+                        batch_loss = criterion(log_ps2, labels2)
+                        valid_loss += batch_loss.item()
+                        #get top probability
+                        ps2 = torch.exp(log_ps2)
+                        top_ps2, top_class = ps2.topk(1,dim=1)
+                        ##check to see if the top class is equal to the labels
+                        #equality = 1 if it's a match and it = 0 if it's wrong
+                        equality = top_class == labels2.view(*top_class.shape)
+                        #takes the average of equality (rights and wrongs) and continues to increase throught the loops
+                        accuracy += torch.mean(equality.type(torch.FloatTensor))
+                training_loss = running_loss/print_every
+                valid_loss = valid_loss/len(validloader)
+                accuracy = accuracy/len(testloader)
+
+        print('epoch{}/{}'.format(e+1, epochs),
+                'training loss{:.3f}'.format(training_loss),
+                'validation loss {:.3f}'.format(valid_loss),
+                'accuracy{:.3f}'.format(accuracy))
+
+    running_loss = 0
+    model.train()
+print('woohoo! Training is complete!')
+
