@@ -30,3 +30,27 @@ def load_checkpoint(filepath):
     return model
 
 saved_model = load_checkpoint('checkpoint.pth')
+
+
+def process_image(image):
+    '''Scales, crops, and normalizes a PIL image for a PyTorch model, 
+    returns a numpy array
+    '''
+    #process a PIL image for use in Pytorch model
+
+    #open image
+    im = Image.open(image)
+
+    #transform image
+    img_transform = transforms.Compose([transforms.Resize(256),
+                                       transforms.CenterCrop(224),
+                                       transforms.ToTensor(),
+                                       transforms.Normalize(mean = [0.485, 0.456, 0.406],
+                                                            std = [0.229, 0.224, 0.225])])
+
+    transformed_img = img_transform(im)
+
+    #convert to numpy array
+    np_image = np.array(transformed_img)
+
+    return np_image
