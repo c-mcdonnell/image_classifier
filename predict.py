@@ -54,3 +54,23 @@ def process_image(image):
     np_image = np.array(transformed_img)
 
     return np_image
+
+def predict(image_path, model, topk = 5):
+     ''' Predict the class (or classes) of an image using a trained deep learning model.
+     '''
+     #convert image file to a processed tensor
+     torch_image = torch.from_numpy(process_image(image_path)).type(torch.FloatTensor)
+     torch_image = torch_image.unsqueeze(0)
+     model.to('cpu')
+     model.eval()
+     torch_image = torch_image.to('cpu')
+
+     with torch.no_grad():
+         #run model on image
+         output = model(torch_image)
+
+         #convert model output
+         probabilities = torch.exp(output)
+         top_probs, top_classes = probabilities.topk(5)
+
+         return top_probs, top_classes
