@@ -164,10 +164,10 @@ with active_session():
                 valid_loss = valid_loss/len(validloader)
                 accuracy = accuracy/len(testloader)
 
-        print('epoch{}/{}'.format(e+1, epochs),
-                'training loss{:.3f}'.format(training_loss),
+        print('epoch {}/{}'.format(e+1, epochs),
+                'training loss {:.3f}'.format(training_loss),
                 'validation loss {:.3f}'.format(valid_loss),
-                'accuracy{:.3f}'.format(accuracy))
+                'accuracy {:.3f}'.format(accuracy))
 
     running_loss = 0
     model.train()
