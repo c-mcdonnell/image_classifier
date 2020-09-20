@@ -1,7 +1,5 @@
 # import necessary packages
 
-%config InlineBackend.figure_format = 'retina'
-
 import matplotlib.pyplot as plt
 import torch
 from torch import nn, optim
