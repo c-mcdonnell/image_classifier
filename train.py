@@ -192,5 +192,5 @@ checkpoint = {'batch_size' : 32,
             'output_size': 4096,
             'criterion': criterion,
             'class_to_idx': model.class_to_idx}
-torch.save(checkpoint, 'checkpoint.ptch')
+torch.save(checkpoint, 'checkpoint.pth')
 
