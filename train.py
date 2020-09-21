@@ -9,7 +9,7 @@ from collections import OrderedDict
 from PIL import Image
 import numpy as np
 
-from get_input_args import get_imput_args
+from get_input_args import get_input_args
 
 #Retrieve command line arguments from user running the program from a terminal window
 #Returns the collection of these CL arguments from the function call 
