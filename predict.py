@@ -8,6 +8,15 @@ from collections import OrderedDict
 from PIL import Image
 import numpy as np
 
+from get_input_args import get_input_args
+
+#Retrieve command line arguments from user running the program from a terminal window
+#Returns the collection of these CL arguments from the function call 
+in_args = get_imput_args()
+
+#check command line arguments
+check_command_line_arguments(in_args)
+
 #load the checkpoint
 def load_checkpoint(filepath):
     checkpoint = torch.load(filepath)
