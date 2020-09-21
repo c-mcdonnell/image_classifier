@@ -185,7 +185,6 @@ model.class_to_idx = train_data.class_to_idx
 #define checkpoint with parameters to be saved
 
 checkpoint = {'batch_size' : 32,
-            'learning_rate': 0.0001,
             'state_dict': model.state_dict(),
             'optimizer': optimizer.state_dict(),
             'input_size': 25088,

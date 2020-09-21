@@ -15,7 +15,6 @@ def load_checkpoint(filepath):
 
     #load saved attributes to model
     model.batch_size = checkpoint['batch_size']
-    model.learning_rate = checkpoint['learing_rate']
     model.state_dict = checkpoint['state_dict']
     model.optimizer = checkpoint['optimizer']
     model.input_size = checkpoint['input_size']
