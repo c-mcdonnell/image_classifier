@@ -9,14 +9,23 @@ from collections import OrderedDict
 from PIL import Image
 import numpy as np
 
-from get_input_args import get_input_args
+import argparse
 
 #Retrieve command line arguments from user running the program from a terminal window
 #Returns the collection of these CL arguments from the function call 
-in_args = get_imput_args()
+#in_args = get_imput_args()
 
 #check command line arguments
-check_command_line_arguments(in_args)
+#check_command_line_arguments(in_args)
+parser = argparse.ArgumentParser()
+parser.add_argument('--save_dir', dest = 'checkpoint.pth', action = 'store', type = str, default='yes', help = 'Would you like to save the checkpoint after training?')
+parser.add_argument('--arch', type=str, default='vgg16', help = 'CNN model archiecture, default = vgg16')
+parser.add_argument('--learning_rate', type = int, default=0.0001, help = 'set learning rate for model')
+parser.add_argument('--hidden_units', type = int, default = 4096, help = 'set number of hidden units in model')
+parser.add_argument('--epochs', type = int, default = 4, help = 'set number of epochs')
+parser.add_argument('--gpu', type = str, default = 'yes', help = 'option to use GPU for training')
+parser.add_argument('--category_names', type = str, default = 'cat_to_name.json', help = 'map categories to real names')
+in_args = parser.parse_args()
 
 #sample data directory
 data_dir = 'flowers'
@@ -61,25 +70,25 @@ images, labels = next(iter(trainloader))
 
 #load in label mapping
 import json
-with open('cat_to_name.json', 'r') as f:
-    cat_to_name = json.load(f)
+with open(in_args.category_names, 'r') as f:
+    in_args.category_names = json.load(f)
 
 #load a pretrained model
 
 #use GPU if available
-device = torch.device("cuda" if torch.cuda.is_available else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available and in_args.gpu == 'yes' else "cpu")
 
 #load a pretrained model - freeze feature parameters
-model = models.vgg16(pretrained = True)
+model = models.in_args.arch(pretrained = True)
 for param in model.parameters():
     param.requires_grad = True
 
 #define feedforward network
 classifier = nn.Sequential(OrderedDict([
-                            ('fc1', nn.Linear(25088,4096)),
+                            ('fc1', nn.Linear(25088,in_args.hidden_units)),
                             ('relu1', nn.ReLU()),
                             ('dropout1', nn.Dropout(0.2)),
-                            ('fc2', nn.Linear(4096,2048)),
+                            ('fc2', nn.Linear(in_args.hidden_units,2048)),
                             ('relu2', nn.ReLU()),
                             ('dropout2', nn.Dropout(0.2)),
                             ('fc3', nn.Linear(2048, 102)),
@@ -87,7 +96,7 @@ classifier = nn.Sequential(OrderedDict([
 model.classifier = classifier
 
 criterion = nn.NLLLoss()
-optimizer = optim.Adam(classifier.parameters(), lr = 0.0001)
+optimizer = optim.Adam(classifier.parameters(), lr = in_args.learning_rate)
 model = model.to(device)
 images, labels = images.to(device), labels.to(device)
 
@@ -112,7 +121,7 @@ with active_session():
     #get data, initialize parameters
     images, labels = next(iter(trainloader))
 
-    epochs = 4
+    epochs = in_args.epochs
     steps = 0
     #running_loss = 0
     '''
@@ -200,5 +209,5 @@ checkpoint = {'batch_size' : 32,
             'output_size': 4096,
             'criterion': criterion,
             'class_to_idx': model.class_to_idx}
-torch.save(checkpoint, 'checkpoint.pth')
+torch.save(checkpoint, in_args.save_dir)
 

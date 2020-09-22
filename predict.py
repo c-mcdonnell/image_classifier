@@ -7,20 +7,22 @@ from torchvision import datasets, transforms, models
 from collections import OrderedDict
 from PIL import Image
 import numpy as np
+import argparse
 
-from get_input_args import get_input_args
+#command line inputs
+parser = argparse.ArgumentParser()
+parser.add_argument('checkpoint', type = str, default = 'checkpoint', help = 'return the top k most likely classes')
+parser.add_argument('input_image', dest='input_image', action='store', default = 'data_dir'+'/test'+'/4/'+'image_05636.jpg', type = str)
+parser.add_argument('--topk', type = int, default = 5, help = 'return the top k most likely classes')
+parser.add_argument('--gpu', type = str, default = 'yes', help = 'option to use GPU for training')
+parser.add_argument('--arch', type=str, default='vgg16', help = 'CNN model archiecture, default = vgg16')
+in_args = parser.parse_args()
 
-#Retrieve command line arguments from user running the program from a terminal window
-#Returns the collection of these CL arguments from the function call 
-in_args = get_imput_args()
-
-#check command line arguments
-check_command_line_arguments(in_args)
 
 #load the checkpoint
-def load_checkpoint(filepath):
-    checkpoint = torch.load(filepath)
-    model = models.vgg16(pretrained = True)
+def load_checkpoint(input_image):
+    checkpoint = torch.load(input_image)
+    model = models.in_args.arch(pretrained = True)
 
     #load saved attributes to model
     model.batch_size = checkpoint['batch_size']
@@ -63,7 +65,7 @@ def process_image(image):
 
     return np_image
 
-def predict(image_path, model, topk = 5):
+def predict(image_path, model, topk = in_args.topk):
      ''' Predict the class (or classes) of an image using a trained deep learning model.
      '''
      #convert image file to a processed tensor
@@ -79,6 +81,6 @@ def predict(image_path, model, topk = 5):
 
          #convert model output
          probabilities = torch.exp(output)
-         top_probs, top_classes = probabilities.topk(5)
+         top_probs, top_classes = probabilities.topk(in_args.topk)
 
          return top_probs, top_classes
