@@ -50,7 +50,7 @@ def load_checkpoint(input_image):
 
     return model
 
-saved_model = load_checkpoint('checkpoint.pth')
+model = load_checkpoint('checkpoint.pth')
 
 
 def process_image(image):
