@@ -19,9 +19,13 @@ parser.add_argument('input_image', dest='input_image', action='store', default =
 parser.add_argument('--topk', type = int, default = 5, help = 'return the top k most likely classes')
 parser.add_argument('--gpu', type = str, default = 'yes', help = 'option to use GPU for training')
 parser.add_argument('--arch', type=str, default='vgg16', help = 'CNN model archiecture, default = vgg16')
+parser.add_argument('--category_names', default='cat_to_name.json', help = 'map categories to real names')
 in_args = parser.parse_args()
 
+with open(in_args.category_names, 'r') as f:
+    cat_to_name = json.load(f)
 
+model = models.vgg16(pretrained = True)
 #load the checkpoint
 def load_checkpoint(input_image):
     checkpoint = torch.load(input_image)
