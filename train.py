@@ -79,6 +79,7 @@ with open(in_args.category_names, 'r') as f:
 device = torch.device("cuda" if torch.cuda.is_available and in_args.gpu == 'yes' else "cpu")
 
 #load a pretrained model - freeze feature parameters
+architecture = in_args.arch
 model = models.in_args.arch(pretrained = True)
 for param in model.parameters():
     param.requires_grad = True
@@ -99,7 +100,6 @@ criterion = nn.NLLLoss()
 optimizer = optim.Adam(classifier.parameters(), lr = in_args.learning_rate)
 model = model.to(device)
 images, labels = images.to(device), labels.to(device)
-
 
 #test, I don't think I need this
 '''
@@ -125,7 +125,7 @@ with active_session():
     steps = 0
     #running_loss = 0
     '''
-    running_loss is below (line 126), do I need it up here too?
+    running_loss is below (line 140), do I need it up here too?
     '''
     print_every = 40
     accuracy = 0
@@ -202,12 +202,18 @@ model.class_to_idx = train_data.class_to_idx
 
 #define checkpoint with parameters to be saved
 
-checkpoint = {'batch_size' : 32,
+checkpoint = {'model_arch': 'vgg16',
+            'batch_size' : 32,
+            'lr': in_args.learning_rate,
+            'epoch': in_args.epochs,
+            'arch': in_args.arch,
+            'hidden_units': in_args.hidden_units,
             'state_dict': model.state_dict(),
             'optimizer': optimizer.state_dict(),
             'input_size': 25088,
             'output_size': 4096,
             'criterion': criterion,
-            'class_to_idx': model.class_to_idx}
+            'class_to_idx': model.class_to_idx
+            'classifier': model.classifier}
 torch.save(checkpoint, in_args.save_dir)
 
