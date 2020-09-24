@@ -95,3 +95,22 @@ def predict(image_path, model, topk = in_args.topk):
          top_probs, top_classes = probabilities.topk(in_args.topk)
 
          return top_probs, top_classes
+
+#get a list of the top 5 classes (flower types) and their corresponding probabilities
+top_probs, top_classes = predict(input_image, model)
+
+top_class_list = np.array(top_classes[0]).tolist()
+top_probs_list = np.array(top_probs[0]).tolist()
+
+#turn that list into the names of the classes
+label_list = []
+
+for e in top_class_list:
+    label_list.append(cat_to_name[str(e+1)])
+
+np_labels = np.array(label_list)
+
+guess_idx = top_probs_list.index(max(top_probs_list))
+
+title = np_labels[guess_idx]
+print(title)
