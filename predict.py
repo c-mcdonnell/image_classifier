@@ -26,19 +26,23 @@ with open(in_args.category_names, 'r') as f:
     cat_to_name = json.load(f)
 
 model = models.vgg16(pretrained = True)
+
 #load the checkpoint
 def load_checkpoint(input_image):
     checkpoint = torch.load(input_image)
     model = models.in_args.arch(pretrained = True)
 
     #load saved attributes to model
-    model.batch_size = checkpoint['batch_size']
+    model.classifier - checkpoint['classifier']
+    #model.batch_size = checkpoint['batch_size']
     model.state_dict = checkpoint['state_dict']
-    model.optimizer = checkpoint['optimizer']
-    model.input_size = checkpoint['input_size']
-    model.output_size = checkpoint['output_size']
-    model.criterion = checkpoint['criterion']
     model.class_to_idx = checkpoint['class_to_idx']
+    model.learning_rate = checkpoint['lr']
+    #model.optimizer = checkpoint['optimizer']
+    #model.input_size = checkpoint['input_size']
+    #model.output_size = checkpoint['output_size']
+    #model.criterion = checkpoint['criterion']
+
 
     #freeze parameters to avoid backpropogation
     for param in model.parameters():
