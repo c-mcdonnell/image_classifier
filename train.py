@@ -8,6 +8,7 @@ from torchvision import datasets, transforms, models
 from collections import OrderedDict
 from PIL import Image
 import numpy as np
+import time
 
 import argparse
 
@@ -134,6 +135,7 @@ with active_session():
         running_loss = 0
         for images, labels in trainloader:
 
+            time.sleep(0.01)
             steps += 1
             images, labels = images.to(device), labels.to(device)
             '''
