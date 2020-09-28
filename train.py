@@ -97,7 +97,7 @@ classifier = nn.Sequential(OrderedDict([
 model.classifier = classifier
 
 criterion = nn.NLLLoss()
-optimizer = optim.Adam(classifier.parameters(), lr = in_args.learning_rate)
+optimizer = optim.Adam(model.classifier.parameters(), lr = in_args.learning_rate)
 model = model.to(device)
 images, labels = images.to(device), labels.to(device)
 
