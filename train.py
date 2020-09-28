@@ -202,18 +202,17 @@ model.class_to_idx = train_data.class_to_idx
 
 #define checkpoint with parameters to be saved
 
-checkpoint = {'model_arch': 'vgg16',
-            'batch_size' : 32,
+checkpoint = {'classifier': model.classifier,
             'lr': in_args.learning_rate,
-            'epoch': in_args.epochs,
-            'arch': in_args.arch,
-            'hidden_units': in_args.hidden_units,
+            #'epoch': in_args.epochs,
+            #'arch': in_args.arch,
+            #'hidden_units': in_args.hidden_units,
             'state_dict': model.state_dict(),
-            'optimizer': optimizer.state_dict(),
-            'input_size': 25088,
-            'output_size': 4096,
-            'criterion': criterion,
             'class_to_idx': model.class_to_idx,
-            'classifier': model.classifier}
-torch.save(checkpoint, in_args.save_dir)
+            'optimizer_dict': optimizer.state_dict(),
+            #'input_size': 25088,
+            #'output_size': 4096,
+            #'criterion': criterion,
+            }
+torch.save(checkpoint, 'checkpoint.pth')
 
