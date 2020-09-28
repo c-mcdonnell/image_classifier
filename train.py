@@ -79,8 +79,7 @@ with open(in_args.category_names, 'r') as f:
 device = torch.device("cuda" if torch.cuda.is_available and in_args.gpu == 'yes' else "cpu")
 
 #load a pretrained model - freeze feature parameters
-architecture = in_args.arch
-model = models.architecture(pretrained = True)
+model = models.vgg16(pretrained = True)
 for param in model.parameters():
     param.requires_grad = True
 
