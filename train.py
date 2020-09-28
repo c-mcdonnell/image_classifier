@@ -24,7 +24,6 @@ parser.add_argument('--learning_rate', type = int, default=0.0001, help = 'set l
 parser.add_argument('--hidden_units', type = int, default = 4096, help = 'set number of hidden units in model')
 parser.add_argument('--epochs', type = int, default = 4, help = 'set number of epochs')
 parser.add_argument('--gpu', type = str, default = 'yes', help = 'option to use GPU for training')
-parser.add_argument('--category_names', type = str, default = 'cat_to_name.json', help = 'map categories to real names')
 in_args = parser.parse_args()
 
 #sample data directory
@@ -67,11 +66,6 @@ for images, labels in trainloader:
     pass
 
 images, labels = next(iter(trainloader))
-
-#load in label mapping
-import json
-with open(in_args.category_names, 'r') as f:
-    in_args.category_names = json.load(f)
 
 #load a pretrained model
 
