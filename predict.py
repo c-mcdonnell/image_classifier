@@ -14,8 +14,8 @@ input_image = 'flowers/test/4/image_05636.jpg'
 
 #command line inputs
 parser = argparse.ArgumentParser()
-parser.add_argument('checkpoint', type = str, default = 'checkpoint', help = 'return the top k most likely classes')
-parser.add_argument('input_image', dest='input_image', action='store', default = 'data_dir'+'/test'+'/4/'+'image_05636.jpg', type = str)
+parser.add_argument('checkpoint', type = str, default = 'checkpoint.pth', help = 'return the top k most likely classes')
+parser.add_argument('input_image', action='store', default = 'data_dir'+'/test'+'/4/'+'image_05636.jpg', type = str)
 parser.add_argument('--topk', type = int, default = 5, help = 'return the top k most likely classes')
 parser.add_argument('--gpu', type = str, default = 'yes', help = 'option to use GPU for training')
 parser.add_argument('--arch', type=str, default='vgg16', help = 'CNN model archiecture, default = vgg16')
