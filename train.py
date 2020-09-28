@@ -80,7 +80,7 @@ device = torch.device("cuda" if torch.cuda.is_available and in_args.gpu == 'yes'
 
 #load a pretrained model - freeze feature parameters
 architecture = in_args.arch
-model = models.in_args.arch(pretrained = True)
+model = models.architecture(pretrained = True)
 for param in model.parameters():
     param.requires_grad = True
 
@@ -213,7 +213,7 @@ checkpoint = {'model_arch': 'vgg16',
             'input_size': 25088,
             'output_size': 4096,
             'criterion': criterion,
-            'class_to_idx': model.class_to_idx
+            'class_to_idx': model.class_to_idx,
             'classifier': model.classifier}
 torch.save(checkpoint, in_args.save_dir)
 
